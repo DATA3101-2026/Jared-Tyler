@@ -11,7 +11,6 @@ library(nycflights13)
 
 flights
 glimpse(flights)
-View(flights)
 
 #' 
 #' 
@@ -86,4 +85,24 @@ longest_dep_delay <- flights |>
 #' 
 #' ## distinct()
 
-#+ echo=FALSE, message=FALSE
+#'
+#' **Various tutorial snippets**:
+flights |> distinct()
+flights |> distinct(origin)
+flights |> distinct(origin, dest)
+flights |> distinct(origin, dest, .keep_all = TRUE)
+flights |> count(origin, dest, sort = TRUE)
+
+#'
+#' **Question**: Are there any duplicate rows>
+num_flights <- flights |> count()
+num_distinct <- flights |> distinct() |> count()
+#'
+#' > No, there aren't any duplicate rows, since there are `r num_flights` rows in the dataset and there are still `r num_distinct` unique rows.
+
+#'
+#' **Question**: How many unique origin and destination pairs are there in this data frame?
+num_pairs <- flights |> distinct(origin, dest) |> count()
+flights |> distinct(origin, dest)
+#'
+#' > There are `r num_pairs` unique pairs.
