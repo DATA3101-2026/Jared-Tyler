@@ -9,8 +9,22 @@ library(tidyverse)
 library(dplyr)
 library(nycflights13)
 
+flights
+glimpse(flights)
+View(flights)
+
+#' 
 #' 
 #' ## filter()
+
+#'
+#' **Various tutorial snippets**:
+flights |> filter(dep_delay > 120)
+flights |> filter(month == 1 & day == 1)
+flights |> filter(month == 1, day == 1)
+flights |> filter(month %in% c(1, 2))
+jan1 <- flights |> filter(month == 1, day == 1)
+flights |> filter(month == 1, day == 1) -> jan1
 
 #'
 #' **Question**: How many flights had a departure delay longer than 3 hours?
@@ -38,7 +52,13 @@ flights |> filter(year == 2013, month == 9, day == 17)
 #' > `year`, `month`, and `day`
 
 #' 
+#' 
 #' ## arrange()
+
+#'
+#' **Various tutorial snippets**:
+flights |> arrange(year, month, day, dep_time)
+flights |> arrange(desc(dep_delay))
 
 #'
 #' **Task**: Arrange the flights by departure time.
@@ -62,12 +82,8 @@ longest_dep_delay <- flights |>
 #'
 #' > The longest departure delay was `r longest_dep_delay` minutes.
 
-
-
-
-
+#' 
 #' 
 #' ## distinct()
 
 #+ echo=FALSE, message=FALSE
-
