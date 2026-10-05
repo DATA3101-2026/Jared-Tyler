@@ -1,5 +1,5 @@
 #' ---
-#' title: 'Assignment 2a'
+#' title: 'Assignment 2'
 #' author: 'Jared Tyler'
 #' output: github_document
 #' ---
@@ -11,6 +11,7 @@ library(nycflights13)
 
 flights
 glimpse(flights)
+?flights
 
 #' 
 #' 
@@ -106,3 +107,65 @@ num_pairs <- flights |> distinct(origin, dest) |> count()
 flights |> distinct(origin, dest)
 #'
 #' > There are `r num_pairs` unique pairs.
+
+#'
+#'
+#' ## 3.2.5 Exercises
+
+#'
+#' 1. **In a single pipeline for each condition, find all flights that meet the condition:**
+
+#'
+#' - Had an arrival delay of two or more hours
+
+flights |> filter(arr_delay >= 120)
+
+#'
+#' - Flew to Houston (`IAH` or `HOU`)
+
+flights |> filter(dest %in% c('IAH', 'HOU'))
+
+#'
+#' - Were operated by United, American, or Delta
+
+# these are the airline abbreviations as found in the `airlines` data frame
+flights |> filter(carrier %in% c('UA', 'AA', 'DL'))
+
+#'
+#' - Departed in summer (July, August, and September)
+
+flights |> filter(month >= 7, month <= 9)
+
+#'
+#' - Arrived more than two hours late but didn't leave late
+
+# arriving more than 120 minutes (2 hours) late
+# flights only left late if their dep_delay is positive
+flights |> filter(arr_delay > 120, dep_delay <= 0)
+
+#'
+#' - Were delayed by at least an hour, but made up over 30 minutes in flight
+
+# delayed by AT LEAST an hour means it could have left 60 minutes late OR LATER
+# if it made up 30 minutes in flight, its delay on arrival must be 30 minutes LESS THAN its delay on departure
+flights |> filter(dep_delay >= 60, arr_delay < (dep_delay - 30))
+
+#'
+#' 4. **Was there a flight on every day of 2013?**
+
+flights |> distinct(year, month, day) |> count()
+
+#'
+#' > Yes. Using `distinct(year, month, day)` should produce one row per day that there was a flight, and it produced 365 rows. Since 2013 was _not_ a leap year, it only had 365 days. Therefore, there was a flight on every single day.
+
+#'
+#' 5a. **Which flights traveled the farthest distance?**
+
+# arranging by `desc(distance)` will show us flights with the LARGEST `distance` at the top
+flights |> arrange(desc(distance))
+
+#'
+#' 5b. **Which traveled the least distance?**
+
+# arranging by `distance` on its own will show us flights with the SMALLEST `distance` at the top
+flights |> arrange(distance)
