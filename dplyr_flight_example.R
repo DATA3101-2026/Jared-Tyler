@@ -9,6 +9,10 @@ library(tidyverse)
 library(dplyr)
 library(nycflights13)
 
+# ---- Assignment 2a (ish) ----
+
+flights <- flights
+
 flights
 glimpse(flights)
 ?flights
@@ -108,6 +112,8 @@ flights |> distinct(origin, dest)
 #'
 #' > There are `r num_pairs` unique pairs.
 
+# ---- Assignment 2b (ish) ----
+
 #'
 #'
 #' ## 3.2.5 Exercises
@@ -169,3 +175,76 @@ flights |> arrange(desc(distance))
 
 # arranging by `distance` on its own will show us flights with the SMALLEST `distance` at the top
 flights |> arrange(distance)
+
+
+
+
+#'
+#' ---
+#' 
+#' ---
+#' 
+#' ---
+#' 
+
+# ----
+# TODO mark this with date ---
+
+#'
+#'
+#' ## mutate()
+
+#'
+#' **Question**: How much time did the flight make up in the air? (Create a new column called gain.)
+flights |>
+	mutate(gain = dep_delay - arr_delay) |>
+	select(dep_delay, arr_delay, gain)
+
+flights |> mutate(gain = dep_delay - arr_delay, .keep = 'used')
+
+#'
+#' **Question/Task**: Create a new tibble called `flights_delay_gain`. Add columns for gain, speed in hours, and gain per hour. Only keep the columns used or created in this task.
+flights_delay_gain <- flights |> 
+	mutate(gain = dep_delay - arr_delay,
+		   speed = distance / air_time,
+		   gain_per_hour = gain / air_time * 60,
+		   .keep = 'used')
+
+
+
+
+# ---- Oct 8 ----
+
+
+# ---- Testing out joins - first setting up the tibble ----
+flights2 <- flights |> 
+	mutate(id = row_number(), .before = 1)
+flights2
+
+flights2 <- flights |> 
+	select(year, time_hour, origin, dest, tailnum, carrier)
+flights2
+
+# ---- Joins - look up left join ----
+?left_join
+flights2 |> left_join(airlines)
+flights2 |> left_join(planes)
+
+flightsabc <- flights2 |>
+	left_join(planes, join_by(tailnum))
+View(flightsabc)
+
+# ---- What is a semi join? ----
+sjairf2 <- airports |> 
+	semi_join(flights2, join_by(faa == origin))
+sjairf2
+
+# ---- How about a full join? ----
+flights3 <- flights2 |> 
+	full_join(planes)
+flights3
+
+# difference between above and below?
+flights3 <- flights2 |> 
+	full_join(planes, join_by(tailnum))
+View(flights3)
