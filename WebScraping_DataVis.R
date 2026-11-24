@@ -4,6 +4,7 @@ library(httr2)
 library(jsonlite)
 library(purrr)
 library(dplyr)
+library(RJSONIO)
 
 # ---- Nova Scotia tutorial ----
 
@@ -60,4 +61,23 @@ nbc <- data.frame(nbpage |>
 colnames(nbc) # What are the numbers in these columns from? Check out the wiki page if you don't know
 
 
-# Preparation for assignment 7, assignment 8
+# ---- Preparation for assignment 7, assignment 8 ----
+
+lat <- 45.902055  # Dunn building coords
+lon <- -64.373069
+
+# Creating an API request
+resp <- request("https://api.open-meteo.com/v1/forecast") |>
+	req_url_query(
+		latitude = lat,
+		longitude = lon,
+		current = "temperature_2m,wind_speed_10m,wind_direction_10m,cloud_cover"
+	) |>
+	req_perform()
+
+weather <- resp_body_json(resp)
+weather$current
+
+# Saving weather dataset as a json file
+weatherJson <- toJSON(weather)
+write(weatherJson, "weather-test.json")
