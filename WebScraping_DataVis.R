@@ -82,6 +82,7 @@ weather$current
 # Saving weather dataset as a json file
 weatherJson <- toJSON(weather)
 write(weatherJson, "weather-test.json")
+# TODO try out write_json() here to see if you can encapsulate things a bit
 
 # species in the area
 inat <- request("https://api.inaturalist.org/v1/observations") |>
@@ -90,12 +91,14 @@ inat <- request("https://api.inaturalist.org/v1/observations") |>
 	req_perform() |>
 	resp_body_json()
 
+# Note the use of an anonymous function here, think: (x) => x.taxon.name
 species <- sapply(inat$results, \(x) x$taxon$name)
 table(species)
 
 # Save species information
 specJson <- toJSON(species)
 write(specJson, "species-test.json")
+
 
 # ---- Using rinat ----
 
@@ -116,4 +119,9 @@ unique(monarchs$scientific_name)
 # Testing out bounding box of another species
 bounds <- c(45.55, -64.70, 46.00, -64.25)
 heron <- get_inat_obs(query = "Great Blue Heron", bounds = bounds)
-plot(heron$longitude, heron$latitude) # Where is the cluster of herons?
+plot(heron$longitude, heron$latitude) # Where is the cluster of herons? (waterfowl park!)
+
+# TODO check out how inat_map() would've plotted these same observations
+# TODO peruse other rinat functions:
+#  - get_inat_obs_id() -- do we get any more detailed info if we pull up a single specific obs?
+#  - get_inat_obs_project() -- what kinda info do we get about projects? any cool projects around here?
