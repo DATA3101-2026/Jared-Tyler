@@ -113,3 +113,7 @@ monarchs <- get_inat_obs(query = "Monarch Butterfly", year = 2026, month = 8)
 # which taxa were returned? What does this mean?
 unique(monarchs$scientific_name)
 
+# Testing out bounding box of another species
+bounds <- c(45.55, -64.70, 46.00, -64.25)
+heron <- get_inat_obs(query = "Great Blue Heron", bounds = bounds)
+plot(heron$longitude, heron$latitude) # Where is the cluster of herons?
