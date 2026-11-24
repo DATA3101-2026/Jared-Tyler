@@ -81,3 +81,17 @@ weather$current
 # Saving weather dataset as a json file
 weatherJson <- toJSON(weather)
 write(weatherJson, "weather-test.json")
+
+# species in the area
+inat <- request("https://api.inaturalist.org/v1/observations") |>
+	req_url_query(lat = lat, lng = lon, radius = 1, per_page = 50,
+				  quality_grade = "research") |>
+	req_perform() |>
+	resp_body_json()
+
+species <- sapply(inat$results, \(x) x$taxon$name)
+table(species)
+
+# Save species information
+specJson <- toJSON(species)
+write(specJson, "species-test.json")
