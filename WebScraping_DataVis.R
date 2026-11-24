@@ -5,6 +5,7 @@ library(jsonlite)
 library(purrr)
 library(dplyr)
 library(RJSONIO)
+library(rinat)
 
 # ---- Nova Scotia tutorial ----
 
@@ -95,3 +96,20 @@ table(species)
 # Save species information
 specJson <- toJSON(species)
 write(specJson, "species-test.json")
+
+# ---- Using rinat ----
+
+# Some groups will have either proprietary or open-source versions 
+#  of their api for an easier time getting data
+
+# Creating request for specific species
+nymphalidae <- get_inat_obs(taxon_name  = "Nymphalidae", year = 2026, month = 8)
+# how many unique taxa?
+length(unique(nymphalidae$scientific_name))
+
+# Get data from iNaturalist for Monarch Butterflies, searching by date (August 2026)
+monarchs <- get_inat_obs(query = "Monarch Butterfly", year = 2026, month = 8)
+
+# which taxa were returned? What does this mean?
+unique(monarchs$scientific_name)
+
